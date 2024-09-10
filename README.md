@@ -21,8 +21,9 @@ SortingVisualizer is a React application that visualizes the Merge Sort algorith
    cd sorting-visualizer
 
 2. Install the dependencies:
- ```bash
-    npm install
+
+    ```bash
+        npm install
 3. Run the Project:
- ```bash
-    npm run dev
+    ```bash
+        npm run dev
