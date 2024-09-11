@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { getMergeSortAnimations } from '../sortingAlgorithms/algorithms';
-
+import { getMergeSortAnimations } from '../sortingAlgorithms/mergeSort';
+import { getBubbleSortAnimations } from '../sortingAlgorithms/BubbleSort';
 const SortingVisualizer = () => {
     const [array, setArray] = useState([]);
     const [length, setLength] = useState(10);
@@ -34,6 +34,35 @@ const SortingVisualizer = () => {
             }
         }
     };
+    const bubbleSort = () => {
+        const animations = getBubbleSortAnimations(array);
+        for (let i = 0; i < animations.length; i++) {
+            const arrayBars = document.getElementsByClassName('array-bar');
+            const arrayTexts = document.getElementsByClassName('array-text');
+            const isColorChange = i % 4 < 2; // Change color during comparison
+            
+            if (isColorChange) {
+                const [barOneIdx, barTwoIdx] = animations[i];
+                const barOneStyle = arrayBars[barOneIdx].style;
+                const barTwoStyle = arrayBars[barTwoIdx].style;
+                const color = i % 4 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+                setTimeout(() => {
+                    barOneStyle.backgroundColor = color;
+                    barTwoStyle.backgroundColor = color;
+                }, i * ANIMATION_SPEED_MS);
+            } else {
+                // Height update for swapping or keeping the same
+                setTimeout(() => {
+                    const [barIdx, newHeight] = animations[i];
+                    const barStyle = arrayBars[barIdx].style;
+                    const textElement = arrayTexts[barIdx];
+                    barStyle.height = `${newHeight}px`;
+                    textElement.innerHTML = newHeight;
+                }, i * ANIMATION_SPEED_MS);
+            }
+        }
+    };
+    
 
     const generateArray = useCallback(() => {
         const min = 10;
@@ -63,12 +92,18 @@ const SortingVisualizer = () => {
                         className="h-1 mt-2"
                     />
                 </div>
-                <div>
+                <div className='flex justify-between gap-4'>
                     <button
                         className="bg-green-800 text-white px-3 py-2 rounded-lg"
                         onClick={mergeSort}
                     >
                         Merge Sort
+                    </button>
+                    <button
+                        className="bg-green-800 text-white px-3 py-2 rounded-lg"
+                        onClick={bubbleSort}
+                    >
+                        Bubble Sort
                     </button>
                 </div>
                 <div>
