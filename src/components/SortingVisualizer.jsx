@@ -92,7 +92,7 @@ const SortingVisualizer = () => {
 
     return (
         <div className="w-screen overflow-hidden">
-            <div className="flex w-full justify-between items-center m-2 px-4">
+            <div className="flex w-[90%] justify-between items-center mx-auto my-2 px-4">
                 <div className="flex flex-col">
                     <label>Size of array</label>
                     <input
@@ -118,15 +118,13 @@ const SortingVisualizer = () => {
                         Bubble Sort
                     </button>
                 </div>
-                <div>
+                <div className='flex flex-col gap-2'>
                     <button
                         onClick={generateArray}
                         className="bg-green-500 text-white p-2 rounded-md"
                     >
                         Generate New Array
                     </button>
-                </div>
-                <div>
                     <button
                         onClick={stopSort}
                         className="bg-red-500 text-white p-2 rounded-md"
@@ -134,19 +132,22 @@ const SortingVisualizer = () => {
                         Stop Sorting
                     </button>
                 </div>
+                <div>
+
+                </div>
             </div>
             <h1 className='font-bold text-center'>Original array</h1>
-            <div className='flex flex-wrap justify-center text-center max-w-screen px-2 gap-2'>
+            <div className='flex text-[14px] flex-wrap justify-center  max-w-screen px-2 gap-2'>
                 {array.map((item, index) => (
                     <p key={index}>{item}</p>
                 ))}
             </div>
-            <div className={`flex absolute bottom-16 mt-10 ${array.length > 20 ? "gap-0":"gap-2"} px-1 justify-center w-full`}>
+            <div className={`flex ${array.length > 20 ? "gap-0":"gap-2"} absolute bottom-[20px] px-2 justify-center w-full`}>
                 {array.map((item, index) => (
-                    <div className="flex flex-col-reverse" key={index}>
-                        <p className="array-text text-center w-[30px]">{item}</p>
+                    <div className="flex items-center flex-col-reverse" key={index}>
+                        <p className="array-text text-center mx-auto w-[30px]">{item}</p>
                         <div
-                            className="array-bar mx-auto bg-blue-500"
+                            className="array-bar bg-blue-500"
                             style={{
                                 height: `${item}px`,
                                 width: `${Math.max(15, 50 - length)}px`,
