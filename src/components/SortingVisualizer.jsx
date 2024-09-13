@@ -1,14 +1,22 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { getMergeSortAnimations } from '../sortingAlgorithms/mergeSort';
 import { getBubbleSortAnimations } from '../sortingAlgorithms/BubbleSort';
+
 const SortingVisualizer = () => {
     const [array, setArray] = useState([]);
     const [length, setLength] = useState(10);
     const ANIMATION_SPEED_MS = 100;
     const PRIMARY_COLOR = 'rgb(59 130 246)';
     const SECONDARY_COLOR = 'red';
+    const timeoutsRef = useRef([]);
+
+    const stopSort = () => {
+        timeoutsRef.current.forEach(timeoutId => clearTimeout(timeoutId)); 
+        timeoutsRef.current = [];
+    };
 
     const mergeSort = () => {
+        stopSort(); // Stop any ongoing sort before starting a new one
         const animations = getMergeSortAnimations(array);
         for (let i = 0; i < animations.length; i++) {
             const arrayBars = document.getElementsByClassName('array-bar');
@@ -19,52 +27,56 @@ const SortingVisualizer = () => {
                 const barOneStyle = arrayBars[barOneIdx].style;
                 const barTwoStyle = arrayBars[barTwoIdx].style;
                 const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     barOneStyle.backgroundColor = color;
                     barTwoStyle.backgroundColor = color;
                 }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
             } else {
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     const [barOneIdx, newHeight] = animations[i];
                     const barOneStyle = arrayBars[barOneIdx].style;
                     const textElement = arrayTexts[barOneIdx];
                     barOneStyle.height = `${newHeight}px`;
-                    textElement.innerHTML = newHeight; 
+                    textElement.innerHTML = newHeight;
                 }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
             }
         }
     };
+
     const bubbleSort = () => {
+        stopSort(); // Stop any ongoing sort before starting a new one
         const animations = getBubbleSortAnimations(array);
         for (let i = 0; i < animations.length; i++) {
             const arrayBars = document.getElementsByClassName('array-bar');
             const arrayTexts = document.getElementsByClassName('array-text');
             const isColorChange = i % 4 < 2; // Change color during comparison
-            
             if (isColorChange) {
                 const [barOneIdx, barTwoIdx] = animations[i];
                 const barOneStyle = arrayBars[barOneIdx].style;
                 const barTwoStyle = arrayBars[barTwoIdx].style;
                 const color = i % 4 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     barOneStyle.backgroundColor = color;
                     barTwoStyle.backgroundColor = color;
                 }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
             } else {
-                // Height update for swapping or keeping the same
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     const [barIdx, newHeight] = animations[i];
                     const barStyle = arrayBars[barIdx].style;
                     const textElement = arrayTexts[barIdx];
                     barStyle.height = `${newHeight}px`;
                     textElement.innerHTML = newHeight;
                 }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
             }
         }
     };
-    
 
     const generateArray = useCallback(() => {
+        stopSort(); // Stop any ongoing sort when generating a new array
         const min = 10;
         const max = 500;
         const newArray = [];
@@ -114,19 +126,27 @@ const SortingVisualizer = () => {
                         Generate New Array
                     </button>
                 </div>
+                <div>
+                    <button
+                        onClick={stopSort}
+                        className="bg-red-500 text-white p-2 rounded-md"
+                    >
+                        Stop Sorting
+                    </button>
+                </div>
             </div>
-            <h1 className=' font-bold text-center'>Original array</h1>
+            <h1 className='font-bold text-center'>Original array</h1>
             <div className='flex flex-wrap justify-center text-center max-w-screen px-2 gap-2'>
-                {array.map((item)=>(
-                    <p>{item}</p>
+                {array.map((item, index) => (
+                    <p key={index}>{item}</p>
                 ))}
             </div>
-            <div className={`flex absolute bottom-16 mt-10 ${array.length > 20 ? "gap-0":"gap-2"} px-1 justify-center w-full `}>
+            <div className={`flex absolute bottom-16 mt-10 ${array.length > 20 ? "gap-0":"gap-2"} px-1 justify-center w-full`}>
                 {array.map((item, index) => (
                     <div className="flex flex-col-reverse" key={index}>
-                        <p className="array-text text-center w-[30px] r">{item}</p>
+                        <p className="array-text text-center w-[30px]">{item}</p>
                         <div
-                            className="array-bar mx-auto  bg-blue-500"
+                            className="array-bar mx-auto bg-blue-500"
                             style={{
                                 height: `${item}px`,
                                 width: `${Math.max(15, 50 - length)}px`,
