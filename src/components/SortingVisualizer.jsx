@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { getMergeSortAnimations } from '../sortingAlgorithms/mergeSort';
 import { getBubbleSortAnimations } from '../sortingAlgorithms/BubbleSort';
+import { getQuickSortAnimations } from '../sortingAlgorithms/quickSort';
 
 const SortingVisualizer = () => {
     const [array, setArray] = useState([]);
@@ -75,6 +76,48 @@ const SortingVisualizer = () => {
         }
     };
 
+    const quickSort = () => {
+        stopSort(); // Stop any ongoing sort before starting a new one
+        const animations = getQuickSortAnimations(array);
+        for (let i = 0; i < animations.length; i++) {
+            const arrayBars = document.getElementsByClassName('array-bar');
+            const arrayTexts = document.getElementsByClassName('array-text');
+            const [action, barOneIdx, barTwoIdx, barOneHeight, barTwoHeight] = animations[i];
+    
+            if (action === 'compare') {
+                const barOneStyle = arrayBars[barOneIdx].style;
+                const barTwoStyle = arrayBars[barTwoIdx].style;
+                const timeoutId = setTimeout(() => {
+                    barOneStyle.backgroundColor = SECONDARY_COLOR;
+                    barTwoStyle.backgroundColor = SECONDARY_COLOR;
+                }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
+            } else if (action === 'revert') {
+                const barOneStyle = arrayBars[barOneIdx].style;
+                const barTwoStyle = arrayBars[barTwoIdx].style;
+                const timeoutId = setTimeout(() => {
+                    barOneStyle.backgroundColor = PRIMARY_COLOR;
+                    barTwoStyle.backgroundColor = PRIMARY_COLOR;
+                }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
+            } else if (action === 'swap') {
+                const timeoutId = setTimeout(() => {
+                    const barOneStyle = arrayBars[barOneIdx].style;
+                    const barTwoStyle = arrayBars[barTwoIdx].style;
+                    const textOne = arrayTexts[barOneIdx];
+                    const textTwo = arrayTexts[barTwoIdx];
+    
+                    // Swap the heights and inner text
+                    barOneStyle.height = `${barTwoHeight}px`;
+                    barTwoStyle.height = `${barOneHeight}px`;
+                    textOne.innerHTML = barTwoHeight;
+                    textTwo.innerHTML = barOneHeight;
+                }, i * ANIMATION_SPEED_MS);
+                timeoutsRef.current.push(timeoutId);
+            }
+        }
+    };
+
     const generateArray = useCallback(() => {
         stopSort(); // Stop any ongoing sort when generating a new array
         const min = 10;
@@ -92,7 +135,7 @@ const SortingVisualizer = () => {
 
     return (
         <div className="w-screen overflow-hidden">
-            <div className="flex w-[90%] justify-between items-center mx-auto my-2 px-4">
+            <div className="flex w-[90%] justify-around items-center mx-auto my-2 px-4">
                 <div className="flex flex-col">
                     <label>Size of array</label>
                     <input
@@ -106,16 +149,22 @@ const SortingVisualizer = () => {
                 </div>
                 <div className='flex justify-between gap-4'>
                     <button
-                        className="bg-green-800 text-white px-3 py-2 rounded-lg"
+                        className="bg-green-800 w-[120px] text-white px-3 py-2 rounded-lg"
                         onClick={mergeSort}
                     >
                         Merge Sort
                     </button>
                     <button
-                        className="bg-green-800 text-white px-3 py-2 rounded-lg"
+                        className="bg-green-800 w-[120px] text-white px-3 py-2 rounded-lg"
                         onClick={bubbleSort}
                     >
                         Bubble Sort
+                    </button>
+                    <button
+                        className="bg-green-800 w-[120px] text-white px-3 py-2 rounded-lg"
+                        onClick={quickSort}
+                    >
+                        Quick Sort
                     </button>
                 </div>
                 <div className='flex flex-col gap-2'>
@@ -132,17 +181,15 @@ const SortingVisualizer = () => {
                         Stop Sorting
                     </button>
                 </div>
-                <div>
-
-                </div>
+                <div></div>
             </div>
             <h1 className='font-bold text-center'>Original array</h1>
-            <div className='flex text-[14px] flex-wrap justify-center  max-w-screen px-2 gap-2'>
+            <div className='flex text-[14px] flex-wrap justify-center max-w-screen px-2 gap-2'>
                 {array.map((item, index) => (
                     <p key={index}>{item}</p>
                 ))}
             </div>
-            <div className={`flex ${array.length > 20 ? "gap-0":"gap-2"} absolute bottom-[20px] px-2 justify-center w-full`}>
+            <div className={`flex ${array.length > 20 ? "gap-0" : "gap-2"} absolute bottom-[20px] px-2 justify-center w-full`}>
                 {array.map((item, index) => (
                     <div className="flex items-center flex-col-reverse" key={index}>
                         <p className="array-text text-center mx-auto w-[30px]">{item}</p>
