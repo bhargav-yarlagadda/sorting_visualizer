@@ -1,3 +1,4 @@
+import { getInsertionSortAnimations } from '../sortingAlgorithms/insertionSort';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { getMergeSortAnimations } from '../sortingAlgorithms/mergeSort';
 import { getBubbleSortAnimations } from '../sortingAlgorithms/BubbleSort';
@@ -15,6 +16,48 @@ const SortingVisualizer = () => {
         timeoutsRef.current.forEach(timeoutId => clearTimeout(timeoutId)); 
         timeoutsRef.current = [];
     };
+
+
+const insertionSort = () => {
+    stopSort(); // Stop any ongoing sort before starting a new one
+    const animations = getInsertionSortAnimations(array);
+    for (let i = 0; i < animations.length; i++) {
+        const arrayBars = document.getElementsByClassName('array-bar');
+        const arrayTexts = document.getElementsByClassName('array-text');
+        const [barOneIdx, barTwoIdx, action] = animations[i];
+
+        if (action === 'compare') {
+            const barOneStyle = arrayBars[barOneIdx].style;
+            const barTwoStyle = arrayBars[barTwoIdx].style;
+            const timeoutId = setTimeout(() => {
+                barOneStyle.backgroundColor = SECONDARY_COLOR;
+                barTwoStyle.backgroundColor = SECONDARY_COLOR;
+            }, i * ANIMATION_SPEED_MS);
+            timeoutsRef.current.push(timeoutId);
+        } else if (action === 'swap') {
+            const timeoutId = setTimeout(() => {
+                const barOneStyle = arrayBars[barOneIdx].style;
+                const barTwoStyle = arrayBars[barTwoIdx].style;
+                const textOne = arrayTexts[barOneIdx];
+                const textTwo = arrayTexts[barTwoIdx];
+
+                // Swap the heights and inner text
+                let tempHeight = barOneStyle.height;
+                barOneStyle.height = barTwoStyle.height;
+                barTwoStyle.height = tempHeight;
+
+                let tempText = textOne.innerHTML;
+                textOne.innerHTML = textTwo.innerHTML;
+                textTwo.innerHTML = tempText;
+
+                // Revert the colors back to normal
+                barOneStyle.backgroundColor = PRIMARY_COLOR;
+                barTwoStyle.backgroundColor = PRIMARY_COLOR;
+            }, i * ANIMATION_SPEED_MS);
+            timeoutsRef.current.push(timeoutId);
+        }
+    }
+};
 
     const mergeSort = () => {
         stopSort(); // Stop any ongoing sort before starting a new one
@@ -165,6 +208,12 @@ const SortingVisualizer = () => {
                         onClick={quickSort}
                     >
                         Quick Sort
+                    </button>
+                    <button
+                        className="bg-green-800 w-[120px] text-white px-3 py-2 rounded-lg"
+                        onClick={insertionSort}
+                    >
+                        Insertion Sort
                     </button>
                 </div>
                 <div className='flex flex-col gap-2'>
