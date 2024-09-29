@@ -178,7 +178,7 @@ const insertionSort = () => {
 
     return (
         <div className="w-screen overflow-hidden">
-            <div className="flex w-[90%] justify-around items-center mx-auto my-2 px-4">
+            <div className="flex w-[90%] flex-wrap gap-2 justify-around items-center mx-auto my-2 px-4">
                 <div className="flex flex-col">
                     <label>Size of array</label>
                     <input
@@ -216,7 +216,7 @@ const insertionSort = () => {
                         Insertion Sort
                     </button>
                 </div>
-                <div className='flex flex-col gap-2'>
+                <div className='flex mx-auto md:flex-col gap-2'>
                     <button
                         onClick={generateArray}
                         className="bg-green-500 text-white p-2 rounded-md"
