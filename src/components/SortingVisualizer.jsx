@@ -216,16 +216,16 @@ const insertionSort = () => {
                         Insertion Sort
                     </button>
                 </div>
-                <div className='flex mx-auto gap-2'>
+                <div className='flex mx-auto w-[350px] gap-2'>
                     <button
                         onClick={generateArray}
-                        className="bg-green-500 text-white p-2  rounded-md"
+                        className="bg-green-500 w-1/2 text-white p-2  rounded-md"
                     >
                         Generate New Array
                     </button>
                     <button
                         onClick={stopSort}
-                        className="bg-red-500 text-white p-2 rounded-md"
+                        className="bg-red-500 w-1/2 text-white p-2 rounded-md"
                     >
                         Stop Sorting
                     </button>
