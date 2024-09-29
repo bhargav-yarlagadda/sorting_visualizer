@@ -243,7 +243,7 @@ const insertionSort = () => {
                     <div className="flex items-center flex-col-reverse" key={index}>
                         <p className="array-text text-center mx-auto w-[30px]">{item}</p>
                         <div
-                            className="array-bar bg-blue-500"
+                            className="array-bar bg-blue-500 hover:bg-blue-600 rounded-t-md"
                             style={{
                                 height: `${item}px`,
                                 width: `${Math.max(15, 50 - length)}px`,
