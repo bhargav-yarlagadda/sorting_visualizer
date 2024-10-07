@@ -7,7 +7,7 @@ import { getQuickSortAnimations } from '../sortingAlgorithms/quickSort';
 const SortingVisualizer = () => {
     const [array, setArray] = useState([]);
     const [length, setLength] = useState(10);
-    const ANIMATION_SPEED_MS = 100;
+    const [ANIMATION_SPEED_MS,SET_ANIMATION_SPEED_MS] = useState(50) ;
     const PRIMARY_COLOR = 'rgb(59 130 246)';
     const SECONDARY_COLOR = 'red';
     const timeoutsRef = useRef([]);
@@ -179,7 +179,7 @@ const insertionSort = () => {
     return (
         <div className="w-screen overflow-hidden">
             <div className="flex w-[90%] mt-5 flex-wrap gap-2 justify-around items-center mx-auto my-2 px-4">
-                <div className="flex flex-col">
+                <div className="flex mb-10 flex-col">
                     <label>Size of array</label>
                     <input
                         type="range"
@@ -189,6 +189,18 @@ const insertionSort = () => {
                         onChange={(e) => setLength(Number(e.target.value))}
                         className="h-1 mt-2"
                     />
+                    <div className='flex flex-col relative gap-2 top-4 ' >
+                    <label>Animation Speed</label>
+                    <input
+                        type="range"
+                        min="5"
+                        max="100"
+                        value={ANIMATION_SPEED_MS}
+                        onChange={(e) => SET_ANIMATION_SPEED_MS(Number(e.target.value))}
+                        className="h-1"
+                    />
+                    </div>
+
                 </div>
                 <div className='flex mx-auto justify-between gap-4'>
                     <button
