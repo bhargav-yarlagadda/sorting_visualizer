@@ -1,6 +1,6 @@
 # SortingVisualizer
 
-SortingVisualizer is a React application that visualizes the Merge Sort algorithm. The application generates an array of bars with random heights and allows users to visualize the sorting process in real-time.
+Sorting Visualizer is a React application that visualizes the Merge Sort algorithm. The application generates an array of bars with random heights and allows users to visualize the sorting process in real-time.
 
 ## Features
 
